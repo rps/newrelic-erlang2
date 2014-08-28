@@ -37,7 +37,7 @@ get_redirect_host() ->
     Url = url([{method, get_redirect_host}]),
     case request(Url) of
         {ok, {{200, "OK"}, _, Body}} ->
-            {Struct} = jiffy:decode(Body),
+            {Struct} = jsx:decode(Body),
             binary_to_list(proplists:get_value(<<"return_value">>, Struct));
         {ok, {{503, _}, _, _}} ->
             throw(newrelic_down);
@@ -60,9 +60,9 @@ connect(Collector, Hostname) ->
               {settings, {[]}}
              ]}],
 
-    case request(Url, jiffy:encode(Data)) of
+    case request(Url, jsx:encode(Data)) of
         {ok, {{200, "OK"}, _, Body}} ->
-            {Struct} = jiffy:decode(Body),
+            {Struct} = jsx:decode(Body),
             {Return} = proplists:get_value(<<"return_value">>, Struct),
             proplists:get_value(<<"agent_run_id">>, Return);
         {ok, {{503, _}, _, _}} ->
@@ -94,9 +94,9 @@ push_error_data(Collector, RunId, ErrorData) ->
 
 
 push_data(Url, Data) ->
-    case request(Url, jiffy:encode(Data)) of
+    case request(Url, jsx:encode(Data)) of
         {ok, {{200, "OK"}, _, Response}} ->
-            {Struct} = jiffy:decode(Response),
+            {Struct} = jsx:decode(Response),
             case proplists:get_value(<<"exception">>, Struct) of
                 undefined ->
                     ok;
