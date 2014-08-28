@@ -2,7 +2,6 @@
 ### (Not currently implemented)
 
  * Make work without the use of `jiffy`
- * Make Elixir friendly
 
 # NewRelic for Erlang
 

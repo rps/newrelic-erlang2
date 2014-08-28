@@ -1,0 +1,6 @@
+%{"decorators": {:git, "git://github.com/chrisavl/erlang_decorators.git", "b14949efc938157604447adc29a71913298fe67f", [branch: "master"]},
+  "edown": {:git, "git://github.com/esl/edown.git", "4d18dc4bec89c20c0ba8cab6884ce690ca606f4a", [ref: "HEAD"]},
+  "jsx": {:package, "2.0.4"},
+  "lhttpc": {:git, "git://github.com/ferd/lhttpc.git", "de7e48fb1045bbe522fa01f7c2c7839d89f04f88", []},
+  "parse_trans": {:git, "git://github.com/uwiger/parse_trans.git", "2adfbfcc17f9cd9da19134c0ecfba30052a26e25", [branch: "master"]},
+  "statman": {:git, "git://github.com/knutin/statman.git", "d3820e209e0f164f83a3ae126045c683a666b2d2", []}}
