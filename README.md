@@ -1,4 +1,5 @@
-# Desired changes (Not currently implemented)
+# Desired changes
+### (Not currently implemented)
 
  * Make work without the use of `jiffy`
  * Make Elixir friendly
