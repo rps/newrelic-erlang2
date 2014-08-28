@@ -1,3 +1,8 @@
+# Desired changes (Not currently implemented)
+
+ * Make work without the use of `jiffy`
+ * Make Elixir friendly
+
 # NewRelic for Erlang
 
 This library implements the New Relic API and allows sending arbitrary
