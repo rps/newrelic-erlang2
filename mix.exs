@@ -9,7 +9,13 @@ defmodule NewrelicErlang.Mixfile do
   end
 
   def application do
-    [applications: [:logger]]
+    [
+      applications:
+      [
+        :lhttpc,
+        :logger
+      ]
+    ]
   end
 
   defp deps do

@@ -37,7 +37,7 @@ get_redirect_host() ->
     Url = url([{method, get_redirect_host}]),
     case request(Url) of
         {ok, {{200, "OK"}, _, Body}} ->
-            {Struct} = jsx:decode(Body),
+            Struct = jsx:decode(Body),
             binary_to_list(proplists:get_value(<<"return_value">>, Struct));
         {ok, {{503, _}, _, _}} ->
             throw(newrelic_down);
