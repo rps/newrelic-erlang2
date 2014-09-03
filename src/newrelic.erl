@@ -49,21 +49,22 @@ get_redirect_host() ->
 connect(Collector, Hostname) ->
     Url = url(Collector, [{method, connect}]),
 
-    Data = [{[
+    Data =  [
               {agent_version, <<"1.5.0.103">>},
               {app_name, [app_name()]},
               {host, ?l2b(Hostname)},
               {identifier, app_name()},
               {pid, ?l2i(os:getpid())},
               {environment, []},
-              {language, <<"python">>},
-              {settings, {[]}}
-             ]}],
+              {language, <<"python">>}
+              % {settings, {[]}}
+            ],
 
-    case request(Url, jsx:encode(Data)) of
+    Request = iolist_to_binary(["[", jsx:encode(Data), "]"]),
+    case request(Url, Request) of
         {ok, {{200, "OK"}, _, Body}} ->
-            {Struct} = jsx:decode(Body),
-            {Return} = proplists:get_value(<<"return_value">>, Struct),
+            Struct = jsx:decode(Body),
+            Return = proplists:get_value(<<"return_value">>, Struct),
             proplists:get_value(<<"agent_run_id">>, Return);
         {ok, {{503, _}, _, _}} ->
             throw(newrelic_down);
@@ -96,7 +97,7 @@ push_error_data(Collector, RunId, ErrorData) ->
 push_data(Url, Data) ->
     case request(Url, jsx:encode(Data)) of
         {ok, {{200, "OK"}, _, Response}} ->
-            {Struct} = jsx:decode(Response),
+            Struct = jsx:decode(Response),
             case proplists:get_value(<<"exception">>, Struct) of
                 undefined ->
                     ok;
