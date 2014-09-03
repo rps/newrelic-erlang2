@@ -95,7 +95,8 @@ push_error_data(Collector, RunId, ErrorData) ->
 
 
 push_data(Url, Data) ->
-    case request(Url, jsx:encode(Data)) of
+    Request = iolist_to_binary(["[", jsx:encode(Data), "]"]),
+    case request(Url, jsx:encode(Request)) of
         {ok, {{200, "OK"}, _, Response}} ->
             Struct = jsx:decode(Response),
             case proplists:get_value(<<"exception">>, Struct) of
