@@ -80,5 +80,5 @@ push(collector, Hostname, Metrics, Errors, State) ->
             ok
     end;
 push(_, Hostname, Metrics, Errors, _State) ->
-    io:put_chars("Pushing data to new relic plugin api (not really... but some day\n"),
+    io:put_chars("Pushing data to new relic plugin api (not really... but some day)\n"),
     ok.
