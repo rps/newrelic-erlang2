@@ -80,5 +80,10 @@ push(collector, Hostname, Metrics, Errors, State) ->
             ok
     end;
 push(_, Hostname, Metrics, Errors, _State) ->
-    io:put_chars("Pushing data to new relic plugin api (not really... but some day)\n"),
-    ok.
+    case catch newrelic_plugin:push(Hostname, Metrics, Errors) of
+        ok ->
+            ok;
+        Error ->
+            % Don't really know what to do here yet.
+            ok
+    end.
