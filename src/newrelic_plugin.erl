@@ -7,8 +7,8 @@
 
 push(Hostname, Metrics, Errors) ->
 
-    % io:put_chars("--------------Metrics----------------\n"),
-    % erlang:display(Metrics),
+    io:put_chars("--------------Metrics----------------\n"),
+    erlang:display(Metrics),
 
     % io:put_chars("--------------Errors------------------\n"),
     % erlang:display(Errors),
@@ -18,8 +18,8 @@ push(Hostname, Metrics, Errors) ->
 
     Json = jsx:encode(Body),
 
-    % io:put_chars("--------------Body-------------------\n"),
-    % erlang:display(binary_to_list(Json)),
+    io:put_chars("--------------Body-------------------\n"),
+    erlang:display(binary_to_list(Json)),
 
     case application:get_env(newrelic, license_keys) of
         {ok, Accounts} -> 
@@ -39,27 +39,36 @@ construct_body(Metrics, Errors) ->
             {<<"pid">>, list_to_integer(os:getpid())},
             {<<"version">>, <<"1.0.0">>}
         ]},
-        {<<"components">>, ConvertedMetrics }
+        {<<"components">>, [
+            [
+                {<<"name">>, <<"CustomerServiceBapi">>},
+                {<<"guid">>, <<"net.onetechnologies.CustomerServiceTest">>},
+                {<<"duration">>, 60},
+                {<<"metrics">>, ConvertedMetrics}
+            ]
+        ]}
     ].
 
 convert_metrics([]) -> 
     [];
-convert_metrics([[{[{name,Name},{scope,_Scope}]},[_,_,_,_,_,_]]|T]) ->
-    Metric = [
-        {<<"name">>, Name},
-        {<<"guid">>, <<"net.onetechnologies.CustomerServiceTest">>},
-        {<<"duration">>, 60},
-        {<<"metrics">>, [
-            {<<"Component/ProductionDatabase[Queries/Second]">>, 100},
-            {<<"Component/AnalyticsDatabase[Queries/Second]">>, [
-                {<<"min">>, 2},
-                {<<"max">>, 10},
-                {<<"total">>, 12},
-                {<<"count">>, 2},
-                {<<"sum_of_squares">>, 104}
-            ]}
-        ]}
-    ],
+convert_metrics([[{[{name,Name},{scope,_Scope}]},[Count,Sum,_,Min,Max,Sum2]]|T]) ->
+    io:put_chars("--------------Metric-----------------\n"),
+    erlang:display(binary_to_list(Name)),
+    erlang:display(Count),
+    erlang:display(Sum),
+    erlang:display(Min),
+    erlang:display(Max),
+    erlang:display(Sum2),
+    io:put_chars("-------------------------------------\n"),
+
+    Metric = {
+        Name, [
+            {<<"min">>, Min},
+            {<<"max">>, Max},
+            {<<"total">>, Sum},
+            {<<"count">>, Count},
+            {<<"sum_of_squares">>, Sum2}
+        ]},
     [Metric|convert_metrics(T)].
 
 convert_errors([]) ->
