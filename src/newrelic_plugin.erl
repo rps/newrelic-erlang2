@@ -7,8 +7,8 @@
 
 push(Hostname, Metrics, Errors) ->
 
-    io:put_chars("--------------Metrics----------------\n"),
-    erlang:display(Metrics),
+    % io:put_chars("--------------Metrics----------------\n"),
+    % erlang:display(Metrics),
 
     % io:put_chars("--------------Errors------------------\n"),
     % erlang:display(Errors),
@@ -20,6 +20,9 @@ push(Hostname, Metrics, Errors) ->
 
     io:put_chars("--------------Body-------------------\n"),
     erlang:display(binary_to_list(Json)),
+
+    io:put_chars("--------------Sample-------------------\n"),
+    erlang:display(binary_to_list(jsx:encode(test_data()))),
 
     case application:get_env(newrelic, license_keys) of
         {ok, Accounts} -> 
@@ -42,7 +45,7 @@ construct_body(Metrics, Errors) ->
         {<<"components">>, [
             [
                 {<<"name">>, <<"CustomerServiceBapi">>},
-                {<<"guid">>, <<"net.onetechnologies.CustomerServiceTest">>},
+                {<<"guid">>, <<"net.onetechnologies.ElixirErlangTest">>},
                 {<<"duration">>, 60},
                 {<<"metrics">>, ConvertedMetrics}
             ]
@@ -53,7 +56,7 @@ convert_metrics([]) ->
     [];
 convert_metrics([[{[{name,Name},{scope,_Scope}]},[Count,Sum,_,Min,Max,Sum2]]|T]) ->
     io:put_chars("--------------Metric-----------------\n"),
-    erlang:display(binary_to_list(Name)),
+    erlang:display(binary_to_list(<<"Component/", Name/binary>>)),
     erlang:display(Count),
     erlang:display(Sum),
     erlang:display(Min),
@@ -62,7 +65,7 @@ convert_metrics([[{[{name,Name},{scope,_Scope}]},[Count,Sum,_,Min,Max,Sum2]]|T])
     io:put_chars("-------------------------------------\n"),
 
     Metric = {
-        Name, [
+        <<"Component/", Name/binary>>, [
             {<<"min">>, Min},
             {<<"max">>, Max},
             {<<"total">>, Sum},
