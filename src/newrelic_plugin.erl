@@ -18,11 +18,11 @@ push(Hostname, Metrics, Errors) ->
 
     Json = jsx:encode(Body),
 
-    io:put_chars("--------------Body-------------------\n"),
-    erlang:display(binary_to_list(Json)),
+    % io:put_chars("--------------Body-------------------\n"),
+    % erlang:display(binary_to_list(Json)),
 
-    io:put_chars("--------------Sample-------------------\n"),
-    erlang:display(binary_to_list(jsx:encode(test_data()))),
+    % io:put_chars("--------------Sample-------------------\n"),
+    % erlang:display(binary_to_list(jsx:encode(test_data()))),
 
     case application:get_env(newrelic, license_keys) of
         {ok, Accounts} -> 
@@ -54,15 +54,15 @@ construct_body(Metrics, Errors) ->
 
 convert_metrics([]) -> 
     [];
-convert_metrics([[{[{name,Name},{scope,_Scope}]},[Count,Sum,_,Min,Max,Sum2]]|T]) ->
-    io:put_chars("--------------Metric-----------------\n"),
-    erlang:display(binary_to_list(<<"Component/", Name/binary>>)),
-    erlang:display(Count),
-    erlang:display(Sum),
-    erlang:display(Min),
-    erlang:display(Max),
-    erlang:display(Sum2),
-    io:put_chars("-------------------------------------\n"),
+convert_metrics([[{[{name,Name},{scope,_Scope}]},[Count,Sum,_,Min,Max,_Sum2]]|T]) ->
+    % io:put_chars("--------------Metric-----------------\n"),
+    % erlang:display(binary_to_list(<<"Component/", Name/binary>>)),
+    % erlang:display(Count),
+    % erlang:display(Sum),
+    % erlang:display(Min),
+    % erlang:display(Max),
+    % erlang:display(_Sum2),
+    % io:put_chars("-------------------------------------\n"),
 
     Metric = {
         <<"Component/", Name/binary>>, [
@@ -70,7 +70,7 @@ convert_metrics([[{[{name,Name},{scope,_Scope}]},[Count,Sum,_,Min,Max,Sum2]]|T])
             {<<"max">>, Max},
             {<<"total">>, Sum},
             {<<"count">>, Count},
-            {<<"sum_of_squares">>, Sum2}
+            {<<"sum_of_squares">>, _Sum2}
         ]},
     [Metric|convert_metrics(T)].
 
